@@ -16,6 +16,7 @@ urlpatterns = patterns('',
     # url(r'^$', 'basinweb.views.home', name='home'),
     # url(r'^blog/', include('blog.urls')),
 
+    url(r'^$', 'tasks.views.index'),
     url(r'^api/', include(api_router.urls)),
     url(r'^admin/', include(admin.site.urls)),
 )
