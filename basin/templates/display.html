@@ -13,7 +13,14 @@
 
 <body>
     <div class="main">
-        <h1> Active </h1>
+        <div class="nav">
+        <div class="nav-item selected"> Active </div>
+        <div class="nav-item"> Sleeping </div>
+        <div class="nav-item"> Blocked </div>
+        <div class="nav-item"> Delegated </div>
+        <div class="nav-item"> Completed </div>
+        <div class="nav-item"> Trashed </div>
+        </div>
         <table class="task-list">
             {% for task in active %}
             <tr class="{% if task.project %}project{% else %}action{% endif %}">
@@ -22,10 +29,10 @@
                     {% if task.due %} (due {{ task.due }}) {% endif %}
                     <br/>
                     <button>Sleep</button>
-                    <button>Delegate</button>
                     <button>Block</button>
-                    <button>Mark done</button>
-                    <button>Delete</button>
+                    <button>Delegate</button>
+                    <button>Complete</button>
+                    <button>Trash</button>
                 </td>
             </tr>
             {% endfor %}

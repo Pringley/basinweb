@@ -25,3 +25,17 @@ h1 {
 .task-list button {
     font-size: 70%;
 }
+
+.nav {
+    margin-bottom: 10px;
+}
+
+.nav-item {
+    display: inline-block;
+    font-size: 80%;
+    padding: 10px;
+}
+
+.nav-item.selected {
+    font-weight: bold;
+}
