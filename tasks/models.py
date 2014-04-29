@@ -23,8 +23,46 @@ class Assignee(models.Model):
     def __str__(self):
         return self.name
 
+class TaskManager(models.Manager):
+    """Custom Manager for Task objects."""
+
+    def valid(self):
+        """Return all tasks that haven't been deleted."""
+        return self.filter(trashed=False)
+
+    def incomplete(self):
+        """Return all valid, incomplete tasks (aka the TODOs)."""
+        return self.filter(completed=False, trashed=False)
+
+    def active(self):
+        """Return all incomplete tasks that aren't sleeping, blocked, etc."""
+        return (self.incomplete()
+                # exclude sleeping
+                .exclude(sleepforever=True)
+                .exclude(sleepuntil__gte=now())
+                # exclude delegated
+                .exclude(assignee__isnull=False)
+                # exclude blocked
+                .exclude(blockers__completed=False))
+
+    def sleeping(self):
+        """Return all incomplete but sleeping tasks."""
+        incomplete = self.incomplete()
+        return (incomplete.filter(sleepforever=True) |
+                incomplete.filter(sleepuntil__gte=now()))
+
+    def blocked(self):
+        """Return all incomplete but blocked tasks."""
+        return self.incomplete().filter(blockers__completed=False)
+
+    def delegated(self):
+        """Return all incomplete but delegated tasks."""
+        return self.incomplete().filter(assignee__isnull=False)
+
 class Task(models.Model):
     """A todo item, such as 'take out trash'."""
+    objects = TaskManager()
+
     summary = models.CharField(max_length=144, null=True, blank=True)
     details = models.TextField(null=True, blank=True)
     due = models.DateTimeField(null=True, blank=True)

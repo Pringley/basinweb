@@ -39,7 +39,15 @@ $(function() {
         return view;
     };
 
-    var view = listViewFromUrl('/tasks/api/tasks/')
-    $('#main-task-list').append(view.el);
+    var active = listViewFromUrl('/api/active/')
+    var sleeping = listViewFromUrl('/api/sleeping/')
+    var blocked = listViewFromUrl('/api/blocked/')
+    var delegated = listViewFromUrl('/api/delegated/')
+    var completed = listViewFromUrl('/api/completed/')
+    $('#active-tasks').append(active.el);
+    $('#sleeping-tasks').append(sleeping.el);
+    $('#blocked-tasks').append(blocked.el);
+    $('#delegated-tasks').append(delegated.el);
+    $('#completed-tasks').append(completed.el);
 
 });
