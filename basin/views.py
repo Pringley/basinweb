@@ -8,6 +8,12 @@ def index(request):
     context = {}
     return render(request, 'index.html', context)
 
+def display(request):
+    context = {
+        'active': Task.objects.active()
+    }
+    return render(request, 'display.html', context)
+
 class ActiveViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.active()
     serializer_class = TaskSerializer

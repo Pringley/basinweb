@@ -1,0 +1,23 @@
+.main {
+    margin: 0 auto;
+    padding: 10px;
+    max-width: 500px;
+}
+h1 {
+    font-size: 120%;
+}
+.task-list {
+    width: 100%;
+}
+.task-list td {
+    padding: 15px;
+}
+
+.task-list .project {
+    background: #A5E5F2;
+}
+
+.admin-link {
+    padding: 15px;
+    font-size: 90%;
+}

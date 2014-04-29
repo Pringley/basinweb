@@ -1,0 +1,36 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Basin</title>
+    <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/display.css">
+</head>
+
+<body>
+    <div class="main">
+        <h1> Active </h1>
+        <table class="task-list">
+            {% for task in active %}
+            <tr class="{% if task.project %}project{% else %}action{% endif %}">
+                <td>
+                    <b>{{ task.summary }}</b>
+                    {% if task.due %} (due {{ task.due.isoformat }}) {% endif %}
+                    <br/>
+                    <button>Sleep</button>
+                    <button>Delegate</button>
+                    <button>Block</button>
+                    <button>Mark done</button>
+                    <button>Delete</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+        <a class="admin-link" href="/admin/basin/task/?state=active">Admin interface</a>
+    </div>
+</body>
+</html>
