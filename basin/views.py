@@ -10,7 +10,7 @@ def index(request):
 
 def display(request):
     context = {
-        'active': Task.objects.active()
+        'active': Task.objects.active().order_by_due()
     }
     return render(request, 'display.html', context)
 

@@ -67,6 +67,10 @@ class TaskQuerySet(models.QuerySet):
         """Return all tasks in the trash."""
         return self.filter(trashed=True)
 
+    def order_by_due(self):
+        """Order by due date, with non-due items last."""
+        return self.annotate(not_due=models.Count('due')).order_by('-not_due', 'due')
+
 class Task(models.Model):
     """A todo item, such as 'take out trash'."""
     objects = TaskQuerySet.as_manager()
