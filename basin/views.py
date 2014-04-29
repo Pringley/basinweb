@@ -14,7 +14,7 @@ def display(request):
     else:
         state = 'active'
     context = {
-        'task_list': Task.objects.state(state).order_by_due()
+        'task_list': Task.objects.state(state)
     }
     return render(request, 'display.html', context)
 

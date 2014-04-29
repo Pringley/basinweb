@@ -43,13 +43,14 @@ class TaskQuerySet(models.QuerySet):
                 # exclude delegated
                 .exclude(assignee__isnull=False)
                 # exclude blocked
-                .exclude(blockers__completed=False))
+                .exclude(blockers__completed=False)
+                .order_by_due())
 
     def sleeping(self):
         """Return all incomplete but sleeping tasks."""
         incomplete = self.incomplete()
         return (incomplete.filter(sleepforever=True) |
-                incomplete.filter(sleepuntil__gte=now()))
+                incomplete.filter(sleepuntil__gte=now())).order_by_wakeup()
 
     def blocked(self):
         """Return all incomplete but blocked tasks."""
@@ -83,6 +84,11 @@ class TaskQuerySet(models.QuerySet):
             return self.trashed()
         else:
             return self.none()
+
+    def order_by_wakeup(self):
+        """Order by sleep wakeup date."""
+        return self.annotate(not_sleepuntil=models.Count('sleepuntil')).order_by('sleepforever',
+            '-not_sleepuntil', 'sleepuntil')
 
     def order_by_due(self):
         """Order by due date, with non-due items last."""
