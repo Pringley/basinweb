@@ -38,7 +38,9 @@
                         {% for blocker in task.blockers.all %}'{{ blocker.summary }}'{% endfor %})
                     {% endif %}
                     {% if task.is_delegated %}
-                        (delegated to {{task.assignee.name}})
+                    (delegated to
+                    <a class="task-link" href="/admin/basin/assignee/{{task.assignee.id}}"
+                        target="_blank">{{ task.assignee.name }}</a>)
                     {% endif %}
                     <br/>
                     <!--
