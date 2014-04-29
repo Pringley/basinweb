@@ -23,7 +23,7 @@ class Assignee(models.Model):
     def __str__(self):
         return self.name
 
-class TaskManager(models.Manager):
+class TaskQuerySet(models.QuerySet):
     """Custom Manager for Task objects."""
 
     def valid(self):
@@ -61,7 +61,7 @@ class TaskManager(models.Manager):
 
 class Task(models.Model):
     """A todo item, such as 'take out trash'."""
-    objects = TaskManager()
+    objects = TaskQuerySet.as_manager()
 
     summary = models.CharField(max_length=144, null=True, blank=True)
     details = models.TextField(null=True, blank=True)
