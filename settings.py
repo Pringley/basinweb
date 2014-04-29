@@ -1,5 +1,5 @@
 """
-Django settings for basinproject project.
+Django settings for basin project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.6/topics/settings/
@@ -10,7 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(__file__)
 
 
 # Quick-start development settings - unsuitable for production
@@ -38,7 +38,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rest_framework',
     'basin',
-    'basinapp',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -50,12 +49,12 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     # TEMPORARY DEVELOPMENT SHORTCUT -- delete for production
-    'basinapp.nocsrf.DisableCSRF',
+    'basin.nocsrf.DisableCSRF',
 )
 
-ROOT_URLCONF = 'basinproject.urls'
+ROOT_URLCONF = 'basin.urls'
 
-WSGI_APPLICATION = 'basinproject.wsgi.application'
+WSGI_APPLICATION = 'wsgi.application'
 
 
 # Database
