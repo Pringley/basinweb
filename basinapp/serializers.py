@@ -1,4 +1,4 @@
-from tasks.models import Task, Assignee, Label
+from basin.models import Task, Assignee, Label
 from rest_framework import serializers
 
 class TaskSerializer(serializers.ModelSerializer):

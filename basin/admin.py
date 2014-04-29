@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as ugt
-from tasks.models import Task, Label, Assignee
+
+from basin.models import Task, Label, Assignee
 
 class LabelFilter(admin.SimpleListFilter):
     """Filter by task label."""

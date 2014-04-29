@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 
-from tasks.models import Task, Label, Assignee
-from tasks.serializers import TaskSerializer, LabelSerializer, AssigneeSerializer
+from basin.models import Task, Label, Assignee
+from basinapp.serializers import TaskSerializer, LabelSerializer, AssigneeSerializer
 
 def index(request):
     context = {}

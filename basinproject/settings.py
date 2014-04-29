@@ -1,5 +1,5 @@
 """
-Django settings for basinweb project.
+Django settings for basinproject project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.6/topics/settings/
@@ -37,7 +37,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'tasks',
+    'basin',
+    'basinapp',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -49,12 +50,12 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     # TEMPORARY DEVELOPMENT SHORTCUT -- delete for production
-    'tasks.nocsrf.DisableCSRF',
+    'basinapp.nocsrf.DisableCSRF',
 )
 
-ROOT_URLCONF = 'basinweb.urls'
+ROOT_URLCONF = 'basinproject.urls'
 
-WSGI_APPLICATION = 'basinweb.wsgi.application'
+WSGI_APPLICATION = 'basinproject.wsgi.application'
 
 
 # Database

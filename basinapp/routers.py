@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 from rest_framework import routers
 
-from tasks import views
+from basinapp import views
 
 api_router = routers.DefaultRouter()
 api_router.register(r'active', views.ActiveViewSet)
