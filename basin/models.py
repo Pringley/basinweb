@@ -63,6 +63,10 @@ class TaskQuerySet(models.QuerySet):
         """Return all valid, complete tasks."""
         return self.filter(completed=True, trashed=False)
 
+    def trashed(self):
+        """Return all tasks in the trash."""
+        return self.filter(trashed=True)
+
 class Task(models.Model):
     """A todo item, such as 'take out trash'."""
     objects = TaskQuerySet.as_manager()

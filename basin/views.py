@@ -35,8 +35,25 @@ class CompletedViewSet(viewsets.ModelViewSet):
     serializer_class = TaskSerializer
 
 class TaskViewSet(viewsets.ModelViewSet):
-    queryset = Task.objects.all()
+    model = Task
     serializer_class = TaskSerializer
+
+    def get_queryset(self):
+        if 'state' in self.request.QUERY_PARAMS:
+            state = self.request.QUERY_PARAMS['state']
+            if state == 'active':
+                return Task.objects.active()
+            if state == 'sleeping':
+                return Task.objects.sleeping()
+            if state == 'blocked':
+                return Task.objects.blocked()
+            if state == 'delegated':
+                return Task.objects.delegated()
+            if state == 'completed':
+                return Task.objects.completed()
+            if state == 'trashed':
+                return Task.objects.trashed()
+        return Task.objects.all()
 
 class LabelViewSet(viewsets.ModelViewSet):
     queryset = Label.objects.all()
