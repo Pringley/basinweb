@@ -39,3 +39,12 @@ h1 {
 .nav-item.selected {
     font-weight: bold;
 }
+
+a.task-link {
+    color: black;
+    text-decoration: none;
+}
+
+a.task-link:hover {
+    color: blue;
+}

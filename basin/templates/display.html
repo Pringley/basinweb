@@ -25,7 +25,9 @@
             {% for task in task_list %}
             <tr class="{% if task.project %}project{% else %}action{% endif %}">
                 <td>
-                    <b>{{ task.summary }}</b>
+                    <b><a class="task-link" href="/admin/basin/task/{{ task.id }}" target="_blank">
+                            {{ task.summary }}
+                    </a></b>
                     {% if task.due %} (due {{ task.due }}) {% endif %}
                     {% if task.is_sleeping %}
                         {% if task.sleepforever %} (sleeping indefinitely) {% endif %}
