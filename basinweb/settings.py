@@ -47,6 +47,9 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # TEMPORARY DEVELOPMENT SHORTCUT -- delete for production
+    'tasks.nocsrf.DisableCSRF',
 )
 
 ROOT_URLCONF = 'basinweb.urls'
