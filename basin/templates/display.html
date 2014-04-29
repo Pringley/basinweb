@@ -19,7 +19,7 @@
             <tr class="{% if task.project %}project{% else %}action{% endif %}">
                 <td>
                     <b>{{ task.summary }}</b>
-                    {% if task.due %} (due {{ task.due.isoformat }}) {% endif %}
+                    {% if task.due %} (due {{ task.due }}) {% endif %}
                     <br/>
                     <button>Sleep</button>
                     <button>Delegate</button>
