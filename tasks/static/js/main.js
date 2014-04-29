@@ -39,7 +39,7 @@ $(function() {
         return view;
     };
 
-    var view = listViewFromUrl('/api/tasks/')
+    var view = listViewFromUrl('/tasks/api/tasks/')
     $('#main-task-list').append(view.el);
 
 });
