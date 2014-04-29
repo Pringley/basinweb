@@ -14,29 +14,43 @@
 <body>
     <div class="main">
         <div class="nav">
-        <div class="nav-item selected"> Active </div>
-        <div class="nav-item"> Sleeping </div>
-        <div class="nav-item"> Blocked </div>
-        <div class="nav-item"> Delegated </div>
-        <div class="nav-item"> Completed </div>
-        <div class="nav-item"> Trashed </div>
+        <a href="?state=active" class="nav-item"> Active </a>
+        <a href="?state=sleeping" class="nav-item"> Sleeping </a>
+        <a href="?state=blocked" class="nav-item"> Blocked </a>
+        <a href="?state=delegated" class="nav-item"> Delegated </a>
+        <a href="?state=completed" class="nav-item"> Completed </a>
+        <a href="?state=trashed" class="nav-item"> Trashed </a>
         </div>
         <table class="task-list">
-            {% for task in active %}
+            {% for task in task_list %}
             <tr class="{% if task.project %}project{% else %}action{% endif %}">
                 <td>
                     <b>{{ task.summary }}</b>
                     {% if task.due %} (due {{ task.due }}) {% endif %}
+                    {% if task.is_sleeping %}
+                        {% if task.sleepforever %} (sleeping indefinitely) {% endif %}
+                        {% if task.sleepuntil %} (sleeping until {{ task.sleepuntil }}) {% endif %}
+                    {% endif %}
+                    {% if task.is_blocked %}
+                        (blocked on
+                        {% for blocker in task.blockers.all %}'{{ blocker.summary }}'{% endfor %})
+                    {% endif %}
+                    {% if task.is_delegated %}
+                        (delegated to {{task.assignee.name}})
+                    {% endif %}
                     <br/>
+                    <!--
                     <button>Sleep</button>
                     <button>Block</button>
                     <button>Delegate</button>
                     <button>Complete</button>
                     <button>Trash</button>
+                    -->
                 </td>
             </tr>
             {% endfor %}
         </table>
+        <br/>
         <a class="admin-link" href="/admin/basin/task/?state=active">Admin interface</a>
     </div>
 </body>

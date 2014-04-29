@@ -67,6 +67,23 @@ class TaskQuerySet(models.QuerySet):
         """Return all tasks in the trash."""
         return self.filter(trashed=True)
 
+    def state(self, state):
+        """Filter by a given state."""
+        if state == 'active':
+            return self.active()
+        elif state == 'sleeping':
+            return self.sleeping()
+        elif state == 'blocked':
+            return self.blocked()
+        elif state == 'delegated':
+            return self.delegated()
+        elif state == 'completed':
+            return self.completed()
+        elif state == 'trashed':
+            return self.trashed()
+        else:
+            return self.none()
+
     def order_by_due(self):
         """Order by due date, with non-due items last."""
         return self.annotate(not_due=models.Count('due')).order_by('-not_due', 'due')

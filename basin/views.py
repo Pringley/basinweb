@@ -9,8 +9,12 @@ def index(request):
     return render(request, 'index.html', context)
 
 def display(request):
+    if 'state' in request.GET:
+        state = request.GET['state']
+    else:
+        state = 'active'
     context = {
-        'active': Task.objects.active().order_by_due()
+        'task_list': Task.objects.state(state).order_by_due()
     }
     return render(request, 'display.html', context)
 
@@ -41,18 +45,7 @@ class TaskViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         if 'state' in self.request.QUERY_PARAMS:
             state = self.request.QUERY_PARAMS['state']
-            if state == 'active':
-                return Task.objects.active()
-            if state == 'sleeping':
-                return Task.objects.sleeping()
-            if state == 'blocked':
-                return Task.objects.blocked()
-            if state == 'delegated':
-                return Task.objects.delegated()
-            if state == 'completed':
-                return Task.objects.completed()
-            if state == 'trashed':
-                return Task.objects.trashed()
+            return Task.objects.state(state)
         return Task.objects.all()
 
 class LabelViewSet(viewsets.ModelViewSet):
