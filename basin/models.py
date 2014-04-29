@@ -59,6 +59,10 @@ class TaskQuerySet(models.QuerySet):
         """Return all incomplete but delegated tasks."""
         return self.incomplete().filter(assignee__isnull=False)
 
+    def completed(self):
+        """Return all valid, complete tasks."""
+        return self.filter(completed=True, trashed=False)
+
 class Task(models.Model):
     """A todo item, such as 'take out trash'."""
     objects = TaskQuerySet.as_manager()

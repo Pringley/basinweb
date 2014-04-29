@@ -35,24 +35,15 @@ class StateFilter(admin.SimpleListFilter):
 
     def queryset(self, request, queryset):
         if self.value() == 'active':
-            return (queryset
-                    .filter(trashed=False, completed=False)
-                    .exclude(sleepforever=True)
-                    .exclude(sleepuntil__gte=now())
-                    .exclude(assignee__isnull=False)
-                    .exclude(blockers__completed=False))
+            return queryset.active()
         if self.value() == 'sleeping':
-            incomplete = queryset.filter(trashed=False, completed=False)
-            return (incomplete.filter(sleepforever=True) |
-                    incomplete.filter(sleepuntil__gte=now()))
+            return queryset.sleeping()
         if self.value() == 'blocked':
-            return queryset.filter(trashed=False, completed=False,
-                    blockers__completed=False)
+            return queryset.blocked()
         if self.value() == 'delegated':
-            return queryset.filter(trashed=False, completed=False,
-                    assignee__isnull=False)
+            return queryset.delegated()
         if self.value() == 'completed':
-            return queryset.filter(trashed=False, completed=True)
+            return queryset.completed()
         if self.value() == 'trashed':
             return queryset.filter(trashed=True)
 
