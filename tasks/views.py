@@ -8,23 +8,23 @@ def index(request):
     context = {}
     return render(request, 'index.html', context)
 
-class ActiveViewSet(viewsets.ReadOnlyModelViewSet):
+class ActiveViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.active()
     serializer_class = TaskSerializer
 
-class SleepingViewSet(viewsets.ReadOnlyModelViewSet):
+class SleepingViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.sleeping()
     serializer_class = TaskSerializer
 
-class BlockedViewSet(viewsets.ReadOnlyModelViewSet):
+class BlockedViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.blocked()
     serializer_class = TaskSerializer
 
-class DelegatedViewSet(viewsets.ReadOnlyModelViewSet):
+class DelegatedViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.delegated()
     serializer_class = TaskSerializer
 
-class CompletedViewSet(viewsets.ReadOnlyModelViewSet):
+class CompletedViewSet(viewsets.ModelViewSet):
     queryset = Task.objects.filter(completed=True, trashed=False)
     serializer_class = TaskSerializer
 

@@ -2,17 +2,27 @@ var list;
 $(function() {
     'use strict';
 
-    var Task = Backbone.Model.extend({});
+    var Task = Backbone.Model.extend({
+        toggle_complete: function() {
+            this.save({completed: !this.get("completed")}, {patch: true});
+        }
+    });
     var TaskList = Backbone.Collection.extend({ model: Task })
 
     var ItemView = Backbone.View.extend({
         tagName: 'li',
         template: _.template($('#item-template').html()),
+        events: {
+            'click .done-button': 'toggle_complete',
+        },
         initialize: function() {
             this.render();
         },
         render: function() {
             this.$el.html(this.template(this.model.toJSON()));
+        },
+        toggle_complete: function() {
+            this.model.toggle_complete();
         }
     });
 
