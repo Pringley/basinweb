@@ -1,7 +1,10 @@
+@import url(http://fonts.googleapis.com/css?family=Lato:300);
+
 .main {
     margin: 0 auto;
     padding: 10px;
     max-width: 500px;
+    font-family: "Lato", sans-serif;
 }
 h1 {
     font-size: 120%;
@@ -12,7 +15,9 @@ h1 {
 .task-list td {
     padding: 15px;
 }
-
+.task-list .chk-btn-td {
+    width: 15px;
+}
 .task-list .project {
     background: #A5E5F2;
 }
