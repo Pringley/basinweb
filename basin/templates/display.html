@@ -24,34 +24,40 @@
         <table class="task-list">
             {% for task in task_list %}
             <tr class="{% if task.project %}project{% else %}action{% endif %}">
-                <td class="chk-btn-td"><button></button></td>
-                <td>
-                    <b><a class="task-link" href="/admin/basin/task/{{ task.id }}" target="_blank">
-                            {{ task.summary }}
-                    </a></b>
-                    {% if task.due %} (due {{ task.due }}) {% endif %}
-                    {% if task.is_sleeping %}
-                        {% if task.sleepforever %} (sleeping indefinitely) {% endif %}
-                        {% if task.sleepuntil %} (sleeping until {{ task.sleepuntil }}) {% endif %}
-                    {% endif %}
-                    {% if task.is_blocked %}
-                        (blocked on
-                        {% for blocker in task.blockers.all %}'{{ blocker.summary }}'{% endfor %})
-                    {% endif %}
-                    {% if task.is_delegated %}
-                    (delegated to
-                    <a class="task-link" href="/admin/basin/assignee/{{task.assignee.id}}"
-                        target="_blank">{{ task.assignee.name }}</a>)
-                    {% endif %}
-                    <br/>
-                    <!--
-                    <button>Sleep</button>
-                    <button>Block</button>
-                    <button>Delegate</button>
-                    <button>Complete</button>
-                    <button>Trash</button>
-                    -->
-                </td>
+                <form target="#" method="post">
+                    <td class="chk-btn-td">
+                        <button type="submit" name="submit" value="check"></button>
+                    </td>
+                    <td>
+                        <input type="hidden" name="state" value="{{ state }}" />
+                        <input type="hidden" name="id" value="{{ task.id }}" />
+                        <b><a class="task-link" href="/admin/basin/task/{{ task.id }}" target="_blank">
+                                {{ task.summary }}
+                        </a></b>
+                        {% if task.due %} (due {{ task.due }}) {% endif %}
+                        {% if task.is_sleeping %}
+                            {% if task.sleepforever %} (sleeping indefinitely) {% endif %}
+                            {% if task.sleepuntil %} (sleeping until {{ task.sleepuntil }}) {% endif %}
+                        {% endif %}
+                        {% if task.is_blocked %}
+                            (blocked on
+                            {% for blocker in task.blockers.all %}'{{ blocker.summary }}'{% endfor %})
+                        {% endif %}
+                        {% if task.is_delegated %}
+                        (delegated to
+                        <a class="task-link" href="/admin/basin/assignee/{{task.assignee.id}}"
+                            target="_blank">{{ task.assignee.name }}</a>)
+                        {% endif %}
+                        <br/>
+                        <!--
+                        <button>Sleep</button>
+                        <button>Block</button>
+                        <button>Delegate</button>
+                        <button>Complete</button>
+                        <button>Trash</button>
+                        -->
+                    </td>
+                </form>
             </tr>
             {% endfor %}
         </table>

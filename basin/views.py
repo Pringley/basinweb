@@ -9,12 +9,21 @@ def index(request):
     return render(request, 'index.html', context)
 
 def display(request):
-    if 'state' in request.GET:
-        state = request.GET['state']
-    else:
-        state = 'active'
+    state = 'active'
+    if request.method == 'POST':
+        state = request.POST['state']
+        submit = request.POST['submit']
+        tid = request.POST['id']
+        if submit == 'check':
+            task = Task.objects.get(id=tid)
+            task.completed = not task.completed
+            task.save()
+    elif request.method == 'GET':
+        if 'state' in request.GET:
+            state = request.GET['state']
     context = {
-        'task_list': Task.objects.state(state)
+        'task_list': Task.objects.state(state),
+        'state': state,
     }
     return render(request, 'display.html', context)
 
