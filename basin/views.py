@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from rest_framework import viewsets
 
-from basin.models import Task, Label, Assignee
-from basin.serializers import TaskSerializer, LabelSerializer, AssigneeSerializer
+from basin.models import Task
+from basin.serializers import TaskSerializer
 
 def index(request):
     context = {}
@@ -56,11 +56,3 @@ class TaskViewSet(viewsets.ModelViewSet):
             state = self.request.QUERY_PARAMS['state']
             return Task.objects.state(state)
         return Task.objects.all()
-
-class LabelViewSet(viewsets.ModelViewSet):
-    queryset = Label.objects.all()
-    serializer_class = LabelSerializer
-
-class AssigneeViewSet(viewsets.ModelViewSet):
-    queryset = Assignee.objects.all()
-    serializer_class = AssigneeSerializer

@@ -1,27 +1,6 @@
 from django.db import models
 from django.utils.timezone import now
-
-class Label(models.Model):
-    """A task label, such as 'school' or 'work'."""
-    name = models.CharField(max_length=50)
-    trashed = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.name
-
-class Assignee(models.Model):
-    """Someone to whom you can delegate tasks."""
-    name = models.CharField(max_length=100)
-
-    last_request = models.DateTimeField(null=True, blank=True,
-            help_text='Last time you asked this person for something.')
-    last_response = models.DateTimeField(null=True, blank=True,
-            help_text='Last time this person responded to you.')
-
-    trashed = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.name
+from django.core.validators import RegexValidator
 
 class TaskQuerySet(models.QuerySet):
     """Custom Manager for Task objects."""
@@ -41,7 +20,7 @@ class TaskQuerySet(models.QuerySet):
                 .exclude(sleepforever=True)
                 .exclude(sleepuntil__gte=now())
                 # exclude delegated
-                .exclude(assignee__isnull=False)
+                .filter(delegatedto__exact='')
                 # exclude blocked
                 .exclude(blockers__completed=False)
                 .order_by_due())
@@ -58,7 +37,7 @@ class TaskQuerySet(models.QuerySet):
 
     def delegated(self):
         """Return all incomplete but delegated tasks."""
-        return self.incomplete().filter(assignee__isnull=False)
+        return self.incomplete().exclude(delegatedto__exact='')
 
     def completed(self):
         """Return all valid, complete tasks."""
@@ -98,11 +77,20 @@ class Task(models.Model):
     """A todo item, such as 'take out trash'."""
     objects = TaskQuerySet.as_manager()
 
-    summary = models.CharField(max_length=144, null=True, blank=True)
-    details = models.TextField(null=True, blank=True)
+    summary = models.CharField(max_length=144, blank=True)
+    details = models.TextField(blank=True)
     due = models.DateTimeField(null=True, blank=True)
     completed = models.BooleanField(default=False)
-    labels = models.ManyToManyField(Label, related_name='tasks', blank=True)
+
+    # Labels are stored (denormalized) in a single text field, separated by
+    # commas.
+    labels = models.TextField(blank=True,
+        help_text="Comma-separated labels",
+        validators=[
+        RegexValidator('^\s*([A-Za-z0-9_\-]+)(\s*,\s*[A-Za-z0-9_\-]+)*(\s*,\s*)?$',
+            code='not-alnum-csv',
+            message='labels must be alphanumeric, comma-separated')
+    ])
 
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
@@ -130,10 +118,9 @@ class Task(models.Model):
             symmetrical=False, blank=True,
             help_text="Select any other tasks preventing this from completion.")
 
-    # Delegated tasks have a non-null "assignee" reference.
-    assignee = models.ForeignKey(Assignee, null=True, blank=True,
-            related_name='tasks',
-            help_text="Delegate tasks by specifying an assignee.")
+    # Delegated tasks have a non-empty "delegatedto" field.
+    delegatedto = models.CharField(max_length=128, blank=True,
+            help_text="Delegate tasks by specifying an delegatedto.")
 
     def is_active(self):
         """Check if the task is active (non-sleeping, etc)."""
@@ -157,7 +144,7 @@ class Task(models.Model):
 
     def is_delegated(self):
         """Check if the task is assigned to someone else."""
-        return self.assignee is not None
+        return bool(self.delegatedto)
     is_delegated.boolean = True
     is_delegated.short_description = 'Delegated?'
 

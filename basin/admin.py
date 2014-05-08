@@ -2,21 +2,7 @@ from django.contrib import admin
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as ugt
 
-from basin.models import Task, Label, Assignee
-
-class LabelFilter(admin.SimpleListFilter):
-    """Filter by task label."""
-    title = ugt('label')
-    parameter_name = 'label'
-
-    def lookups(self, request, model_admin):
-        return [(label.name, label.name) for label in
-                Label.objects.filter(trashed=False)]
-
-    def queryset(self, request, queryset):
-        if self.value() is None:
-            return queryset
-        return queryset.filter(labels__name=self.value())
+from basin.models import Task
 
 class StateFilter(admin.SimpleListFilter):
     """Filter by task state."""
@@ -50,43 +36,25 @@ class StateFilter(admin.SimpleListFilter):
 class TaskAdmin(admin.ModelAdmin):
     fieldsets = [
         (None, {
-            'fields': ['summary', 'completed', 'due', 'project', 'labels', 'details'],
+            'fields': ['summary', 'completed', 'due', 'project', 'details', 'labels'],
         }),
         ('Internal', {
-            'fields': ['sleepuntil', 'sleepforever', 'assignee', 'blockers', 'trashed'],
+            'fields': ['sleepuntil', 'sleepforever', 'delegatedto', 'blockers', 'trashed'],
         }),
         ('Timestamp', {
             'fields': ['created', 'modified'],
         }),
     ]
-    filter_horizontal = ['labels', 'blockers']
+    filter_horizontal = ['blockers']
     readonly_fields = ('created', 'modified')
     save_on_top = True
 
     list_display = ('summary', 'due', 'completed', 'project', 'is_active',
             'is_sleeping', 'is_blocked', 'is_delegated')
     list_editable = ('completed',)
-    list_filter = (StateFilter, LabelFilter, 'due', 'created')
-    search_fields = ('summary', 'assignee', 'details')
-    ordering = ('trashed', 'completed', 'assignee', 'blockers', 'sleepforever',
+    list_filter = (StateFilter, 'due', 'created')
+    search_fields = ('summary', 'delegatedto', 'details')
+    ordering = ('trashed', 'completed', 'delegatedto', 'blockers', 'sleepforever',
             'sleepuntil', 'project', 'due', 'created')
 
-class LabelAdmin(admin.ModelAdmin):
-    fields = ('name', 'trashed')
-    save_on_top = True
-
-    list_display = ('name', 'trashed')
-    list_search = ('name',)
-    list_filter = ('trashed',)
-
-class AssigneeAdmin(admin.ModelAdmin):
-    fields = ('name', 'last_request', 'last_response', 'trashed')
-    save_on_top = True
-
-    list_search = ('name',)
-    list_display = ('name', 'last_request', 'last_response', 'trashed')
-    list_filter = ('last_request', 'last_response', 'trashed')
-
 admin.site.register(Task, TaskAdmin)
-admin.site.register(Label, LabelAdmin)
-admin.site.register(Assignee, AssigneeAdmin)
