@@ -1,0 +1,30 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Basin</title>
+    <link rel="shortcut icon" href="/static/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/static/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="/static/css/normalize.css">
+    <link rel="stylesheet" href="/static/css/display.css">
+</head>
+
+<body>
+    <div class="main">
+        <div class="nav">
+        <a href="/?state=active" class="nav-item"> Active </a>
+        <a href="/?state=sleeping" class="nav-item"> Sleeping </a>
+        <a href="/?state=blocked" class="nav-item"> Blocked </a>
+        <a href="/?state=delegated" class="nav-item"> Delegated </a>
+        <a href="/?state=completed" class="nav-item"> Completed </a>
+        <a href="/?state=trashed" class="nav-item"> Trashed </a>
+        </div>
+        {% block taskcontent %}
+        {% endblock %}
+        <br/>
+        <a class="admin-link" href="/admin/basin/task/?state=active">Admin interface</a>
+    </div>
+</body>
+</html>
