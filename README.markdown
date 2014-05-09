@@ -10,3 +10,12 @@ Setup:
 Run:
 
     venv/bin/python manage.py runserver
+
+states:
+
+- active
+- sleeping
+- blocked
+- delegated
+- completed
+- trashed
