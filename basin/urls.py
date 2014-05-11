@@ -8,6 +8,7 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$', 'basin.views.display'),
     url(r'^backbone/', 'basin.views.index'),
+    url(r'^alt/', 'basin.views.alt'),
     url(r'^api/', include(api_router.urls)),
     url(r'^admin/', include(admin.site.urls)),
 )

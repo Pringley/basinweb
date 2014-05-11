@@ -8,6 +8,10 @@ def index(request):
     context = {}
     return render(request, 'index.html', context)
 
+def alt(request):
+    context = {}
+    return render(request, 'alt.html', context)
+
 def display(request):
     state = 'active'
     if request.method == 'POST':
