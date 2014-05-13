@@ -12,10 +12,12 @@ function refresh(new_state) {
         state = new_state;
         _.each(tasks, function(task) {
             if (filters[state](task)) {
-                var item = $('<li>');
-                item.append($('<p>').append(task.summary));
-                var button = $('<button>').append('Done');
-                button.click(function() {
+                var item = $('<li>').addClass('task');
+                var contents = _.template($('#task-template').html(), {
+                    task: task
+                });
+                item.html(contents);
+                item.find('.complete-btn').click(function() {
                     $.ajax({
                         url: "/api/tasks/" + task.id + "/",
                         type: "PATCH",
@@ -24,7 +26,9 @@ function refresh(new_state) {
                         item.hide();
                     });
                 });
-                item.append(button);
+                if (state === 'completed') {
+                    item.find('.complete-btn').html('Un-complete')
+                }
                 mainlist.append(item);
             }
         });
