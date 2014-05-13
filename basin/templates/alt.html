@@ -14,31 +14,38 @@
 
 <body>
 
-    <h1> Basin Alt </h1>
+    <div class="app">
 
-    <div class="nav">
-        <button class="active">Active</button>
-        <button class="sleeping">Sleeping</button>
-        <button class="blocked">Blocked</button>
-        <button class="delegated">Delegated</button>
-        <button class="completed">Completed</button>
-        <button class="trashed">Trashed</button>
+        <h1> Basin Alt </h1>
+
+        <div class="nav">
+            <button class="active">Active</button>
+            <button class="delegated">Delegated</button>
+            <button class="sleeping">Sleeping</button>
+            <button class="blocked">Blocked</button>
+            <button class="completed">Completed</button>
+            <button class="trashed">Trashed</button>
+        </div>
+
+        <ul class="mainlist">
+        </ul>
+
     </div>
-
-    <ul class="mainlist">
-    </ul>
-
-    <script src="/static/js/jquery.js"></script>
-    <script src="/static/js/underscore.js"></script>
-    <script src="/static/js/jquery.datetimepicker.js"></script>
-    <script src="/static/js/alt.js"></script>
 
     <script type="text/template" id="task-template">
         <p class="summary"><%- task.summary %></p>
         <button class="complete-btn">Done</button>
         <button class="sleep-btn">Sleep</button>
         <button class="delegate-btn">Delegate</button>
+        <button class="block-btn">Block</button>
         <button class="trash-btn">Trash</button>
     </script>
+
+    <script src="/static/js/jquery.js"></script>
+    <script src="/static/js/underscore.js"></script>
+    <script src="/static/js/backbone.js"></script>
+    <script src="/static/js/jquery.datetimepicker.js"></script>
+    <script src="/static/js/alt2.js"></script>
+
 </body>
 </html>
