@@ -1,7 +1,7 @@
 .nav .selected {
     background-color: darkGray;
 }
-.task {
+.task, .newtask {
     padding: 20px;
 }
 .task .summary {

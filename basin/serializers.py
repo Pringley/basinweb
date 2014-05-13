@@ -11,6 +11,6 @@ class LabelField(serializers.WritableField):
         return ','.join(data)
 
 class TaskSerializer(serializers.ModelSerializer):
-    labels = LabelField()
+    labels = LabelField(blank=True)
     class Meta:
         model = Task

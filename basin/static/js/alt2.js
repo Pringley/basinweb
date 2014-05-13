@@ -83,6 +83,24 @@ var app = app || {};
     }
 
     var Task = Backbone.Model.extend({
+        defaults: function() {
+            return {
+                summary: '',
+                details: '',
+                due: null,
+                completed: false,
+                labels: [],
+                project: false,
+                trashed: false,
+                sleepuntil: null,
+                sleepforever: false,
+                blockers: [],
+                delegatedto: ''
+            }
+        },
+        url: function() {
+            return Backbone.Model.prototype.url.call(this) + '/';
+        },
         patch: function(attrs) {
             this.save(attrs, {patch: true});
         },
@@ -101,7 +119,7 @@ var app = app || {};
             this.patch({ delegatedto: delegateto });
         },
         undelegate: function() {
-            this.patch({ delegateto: ''});
+            this.patch({ delegatedto: ''});
         },
         get_mdt: function(field) {
             var raw = this.get(field);
@@ -306,6 +324,9 @@ var app = app || {};
     });
 
     var AppView = Backbone.View.extend({
+        events: {
+            'keypress .newtask .summary': 'newTaskKeypress'
+        },
         initialize: function() {
             _.each(STATES, function(state) {
                 var btn = this.$el.find('.nav .' + state);
@@ -315,6 +336,7 @@ var app = app || {};
                     self.renderState(state);
                 });
             }, this);
+            this.current_state = 'active';
         },
         renderState: function(state) {
             var view = new TasksView({
@@ -322,6 +344,32 @@ var app = app || {};
                 collection: app.tasks.filterState(state)
             });
             view.render();
+            _.each(STATES, function(btnstate) {
+                var btn = this.$el.find('.nav .' + btnstate);
+                if (btnstate === state) {
+                    btn.addClass('selected');
+                }
+                else {
+                    btn.removeClass('selected');
+                }
+            }, this);
+            this.current_state = state;
+        },
+        newTaskKeypress: function(e) {
+            if (e.which === ENTER_KEY) {
+                this.newTaskDone();
+            }
+        },
+        newTaskDone: function() {
+            var $nt = this.$el.find('.newtask .summary');
+            var summary = $nt.val().trim();
+            var task = app.tasks.create({summary: summary}, {
+                error: function(model, e, opt) {
+                    console.log(e);
+                }
+            });
+            $nt.val('');
+            this.renderState(this.current_state);
         }
     });
 
