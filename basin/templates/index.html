@@ -35,13 +35,24 @@
     <script type="text/template" id="task-template">
         <div class="info">
             <span class="projecttag">
-                <%- task.project ? "[PROJECT]" : "" %>
+                <%- task.get('project') ? "[PROJECT]" : "" %>
             </span>
-            <span class="summary"><%- task.summary %></span>
-            <input class="edit-summary" value="<%- task.summary %>" />
+            <span class="summary"><%- task.get('summary') %></span>
+            <input class="edit-summary" value="<%- task.get('summary') %>" />
             <span class="due">
-                (due
-                <span class="dt"><%- humandue || 'never' %></span><input class="edit-due" value="<%- task.due || moment().toISOString()%>" />)
+                ( due
+                <span class="dt"><%- task.get_mdt_human('due') || 'never' %></span>
+                <input class="edit-due" value="<%- task.get('due') || moment().toISOString()%>" />
+                )
+            </span>
+            <span class="sleepinfo"
+                <%= task.state() === 'sleeping' ? '' : "style='display:none'"%>>
+                ( wakes
+                <%- task.get('sleepforever') ? 'never' : '' %>
+                <%- task.get('sleepuntil') !== null
+                    ? task.get_mdt_human('sleepuntil')
+                    : '' %>
+                )
             </span>
         </div>
         <button class="complete-btn">Done</button>

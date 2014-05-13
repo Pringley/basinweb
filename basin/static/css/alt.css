@@ -4,6 +4,9 @@
 .task {
     padding: 20px;
 }
+.task .summary {
+    font-weight: bold;
+}
 .task .info {
     display: block;
     padding-bottom: 10px;

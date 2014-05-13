@@ -166,8 +166,7 @@ var app = app || {};
         },
         render: function () {
             this.$el.html(this.template({
-                humandue: this.model.get_mdt_human('due'),
-                task: this.model.toJSON()
+                task: this.model
             }));
             this.$el.addClass('task');
             this.$summary = this.$el.find('.summary');
@@ -284,7 +283,12 @@ var app = app || {};
             }
             else {
                 var sleepuntil = prompt("Sleep until:", (new Date()).toISOString());
-                this.model.sleepuntil(sleepuntil);
+                if (sleepuntil !== '') {
+                    this.model.sleepuntil(sleepuntil);
+                }
+                else {
+                    this.model.patch({sleepforever: true});
+                }
             }
             this.$el.remove();
         },
