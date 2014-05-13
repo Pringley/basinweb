@@ -3,6 +3,20 @@ var TASKS_URL = "/api/tasks/";
 var state = 'active';
 var states = ['active', 'sleeping', 'blocked', 'delegated', 'completed', 'trashed'];
 
+function update(task, fields) {
+    return $.ajax({
+        url: "/api/tasks/" + task.id + "/",
+        type: "PATCH",
+        data: fields
+    })
+}
+
+function update_state(task, element, fields) {
+    update(task, fields).done(function() {
+        element.hide();
+    });
+}
+
 function refresh(new_state) {
     var mainlist = $('.mainlist');
     mainlist.html('');
@@ -17,17 +31,56 @@ function refresh(new_state) {
                     task: task
                 });
                 item.html(contents);
-                item.find('.complete-btn').click(function() {
-                    $.ajax({
-                        url: "/api/tasks/" + task.id + "/",
-                        type: "PATCH",
-                        data: { completed: !task.completed }
-                    }).done(function() {
-                        item.hide();
+                item.find('.complete-btn')
+                .click(function() {
+                    update_state(task, item, { completed: !task.completed });
+                });
+                item.find('.trash-btn')
+                .click(function() {
+                    update_state(task, item, { trashed: !task.trashed });
+                });
+                item.find('.sleep-btn')
+                .click(function() {
+                    var sleeping = filters['sleeping'](task);
+                    var sleepuntil;
+                    if (!sleeping) {
+                        sleepuntil = prompt("Sleep until:", (new Date()).toISOString());
+                    }
+                    update_state(task, item,
+                        !filters['sleeping'](task)
+                            ? { sleepuntil: sleepuntil }
+                            : { sleepuntil: null, sleepforever: false }
+                    );
+                });
+                item.find('.delegate-btn')
+                .click(function() {
+                    var delegatedto;
+                    if (task.delegatedto === '') {
+                        delegatedto = prompt("Delegate to:");
+                    }
+                    update_state(task, item, {
+                        delegatedto:
+                            task.delegatedto === ''
+                                ? delegatedto
+                                : ''
                     });
                 });
                 if (state === 'completed') {
+                    item.find('.sleep-btn').hide();
+                    item.find('.delegate-btn').hide();
                     item.find('.complete-btn').html('Un-complete')
+                }
+                if (state === 'trashed') {
+                    item.find('.complete-btn').hide();
+                    item.find('.sleep-btn').hide();
+                    item.find('.delegate-btn').hide();
+                    item.find('.trash-btn').html('Un-trash')
+                }
+                if (state === 'delegated') {
+                    item.find('.delegate-btn').html('Un-delegate');
+                }
+                if (state === 'sleeping') {
+                    item.find('.sleep-btn').html('Un-sleep');
                 }
                 mainlist.append(item);
             }
