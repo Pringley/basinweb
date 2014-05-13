@@ -1,3 +1,13 @@
 .nav .selected {
     background-color: darkGray;
 }
+.task {
+    padding: 20px;
+}
+.task .info {
+    display: block;
+    padding-bottom: 10px;
+}
+.task .edit-summary, .task .summary {
+    display: inline;
+}

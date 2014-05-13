@@ -33,7 +33,17 @@
     </div>
 
     <script type="text/template" id="task-template">
-        <p class="summary"><%- task.summary %></p>
+        <div class="info">
+            <span class="projecttag">
+                <%- task.project ? "[PROJECT]" : "" %>
+            </span>
+            <span class="summary"><%- task.summary %></span>
+            <input class="edit-summary" value="<%- task.summary %>" />
+            <span class="due">
+                (due
+                <span class="dt"><%- humandue || 'never' %></span><input class="edit-due" value="<%- task.due || moment().toISOString()%>" />)
+            </span>
+        </div>
         <button class="complete-btn">Done</button>
         <button class="sleep-btn">Sleep</button>
         <button class="delegate-btn">Delegate</button>
@@ -44,6 +54,9 @@
     <script src="/static/js/jquery.js"></script>
     <script src="/static/js/underscore.js"></script>
     <script src="/static/js/backbone.js"></script>
+    <script src="/static/js/moment-with-langs.js"></script>
+    <script src="/static/js/moment-timezone.js"></script>
+    <script src="/static/js/moment-timezone-data.js"></script>
     <script src="/static/js/jquery.datetimepicker.js"></script>
     <script src="/static/js/alt2.js"></script>
 

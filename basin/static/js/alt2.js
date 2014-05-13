@@ -5,6 +5,8 @@ var app = app || {};
 
     var STATES = ['active', 'delegated', 'blocked', 'sleeping', 'completed',
                   'trashed'];
+    var ENTER_KEY = 13;
+    var ESCAPE_KEY = 27;
 
     function cmp(x, y) {
         // standard compare:
@@ -101,10 +103,17 @@ var app = app || {};
         undelegate: function() {
             this.patch({ delegateto: ''});
         },
+        get_mdt: function(field) {
+            var raw = this.get(field);
+            return raw === null ? null : new moment(raw);
+        },
+        get_mdt_human: function(field) {
+            var mdt = this.get_mdt(field);
+            return mdt === null ? null : mdt.fromNow();
+        },
         get_dt: function(field) {
             var raw = this.get(field);
-            if (raw === null) { return null; }
-            else { return new Date(raw); }
+            return raw === null ? null : new Date(raw);
         },
         state: function() {
             var trashed = this.get('trashed'),
@@ -139,6 +148,14 @@ var app = app || {};
         tagName: 'div',
         template: _.template($('#task-template').html()),
         events: {
+            'click .summary': 'editSummary',
+            'blur .edit-summary': 'editSummaryReset',
+            'keypress .edit-summary': 'editSummaryKeypress',
+            'keydown .edit-summary': 'editSummaryKeydown',
+            'click .due': 'editDue',
+            'blur .edit-due': 'editDueReset',
+            'keypress .edit-due': 'editDueKeypress',
+            'keydown .edit-due': 'editDueKeydown',
             'click .complete-btn': 'completeBtn',
             'click .sleep-btn': 'sleepBtn',
             'click .delegate-btn': 'delegateBtn',
@@ -148,7 +165,18 @@ var app = app || {};
             this.listenTo(this.model, 'change', this.render);
         },
         render: function () {
-            this.$el.html(this.template({task: this.model.toJSON()}));
+            this.$el.html(this.template({
+                humandue: this.model.get_mdt_human('due'),
+                task: this.model.toJSON()
+            }));
+            this.$el.addClass('task');
+            this.$summary = this.$el.find('.summary');
+            this.$editsummary = this.$el.find('.edit-summary');
+            this.$due = this.$el.find('.due');
+            this.$duedt = this.$due.find('.dt');
+            this.$editdue = this.$el.find('.edit-due');
+            this.$editsummary.hide();
+            this.$editdue.hide();
             var state = this.model.state();
             if (state === 'delegated') {
                 this.$el.find('.delegate-btn').html('Un-delegate');
@@ -174,6 +202,62 @@ var app = app || {};
                 this.$el.find('.block-btn').hide();
                 this.$el.find('.delegate-btn').hide();
                 this.$el.find('.trash-btn').html('Un-trash');
+            }
+        },
+
+        editDue: function () {
+            this.$duedt.hide();
+            this.$editdue.show();
+            this.$editdue.focus();
+        },
+        editDueDone: function () {
+            var value = this.$editdue.val().trim();
+            if (value === this.model.get('due')) {
+                this.editDueReset();
+                return;
+            }
+            this.model.patch({ due: value });
+            this.render();
+        },
+        editDueReset: function(e) {
+            this.$editdue.hide();
+            this.$editdue.val(this.model.get('due'));
+            this.$duedt.show();
+        },
+        editDueKeypress: function(e) {
+            if (e.which === ENTER_KEY) { this.editDueDone(); }
+        },
+        editDueKeydown: function(e) {
+            if (e.which === ESCAPE_KEY) {
+                this.editDueReset();
+            }
+        },
+
+        editSummary: function () {
+            this.$summary.hide();
+            this.$editsummary.show();
+            this.$editsummary.focus();
+        },
+        editSummaryDone: function () {
+            var value = this.$editsummary.val().trim();
+            if (value === this.model.get('summary')) {
+                this.editSummaryReset();
+                return;
+            }
+            this.model.patch({ summary: value });
+            this.render();
+        },
+        editSummaryReset: function(e) {
+            this.$editsummary.hide();
+            this.$editsummary.val(this.model.get('summary'));
+            this.$summary.show();
+        },
+        editSummaryKeypress: function(e) {
+            if (e.which === ENTER_KEY) { this.editSummaryDone(); }
+        },
+        editSummaryKeydown: function(e) {
+            if (e.which === ESCAPE_KEY) {
+                this.editSummaryReset();
             }
         },
         completeBtn: function () {
